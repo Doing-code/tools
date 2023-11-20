@@ -60,6 +60,12 @@
             <artifactId>weixin-java-pay</artifactId>
             <version>${weixin-java.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+            <version>4.1.77.Final</version>
+        </dependency>
     </dependencies>
 
 </project>
