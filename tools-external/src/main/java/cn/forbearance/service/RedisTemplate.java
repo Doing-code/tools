@@ -1,9 +1,9 @@
-package cn.forbearance.service.impl;
+package cn.forbearance.service;
 
-import cn.forbearance.service.RedisCommandService;
-import cn.forbearance.socket.DefaultNettyExecuteService;
-import cn.forbearance.socket.RedisClientService;
+import cn.forbearance.utils.RedisConnectionUtils;
 import cn.forbearance.utils.enums.DataType;
+import org.springframework.lang.Nullable;
+import org.springframework.util.Assert;
 
 import java.util.Collection;
 import java.util.List;
@@ -14,55 +14,45 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author cristina
  */
-public class RedisCommandServiceImpl extends DefaultNettyExecuteService implements RedisCommandService<Object, Object> {
+public class RedisTemplate<K, V> implements RedisOperations<K, V> {
 
-    public RedisCommandServiceImpl(RedisClientService redisClientService) {
-        super(redisClientService.getChannelFuture(), redisClientService.getResponseCallback());
+    private final ValueOperations<K, V> valueOps = new DefaultValueOperations<>(this);
+
+    /**
+     * TODO 需要将 Netty 连接优化为连接池
+     *
+     */
+    public RedisTemplate() {
     }
 
     @Override
-    public DataType type(Object key) {
+    public DataType type(K key) {
         return null;
     }
 
     @Override
-    public Boolean expire(Object key, long timeout, TimeUnit unit) {
+    public Boolean expire(K key, long timeout, TimeUnit unit) {
         return null;
     }
 
     @Override
-    public Long getExpire(Object key, TimeUnit timeUnit) {
+    public Long getExpire(K key, TimeUnit timeUnit) {
         return null;
     }
 
     @Override
-    public Boolean delete(Object key) {
+    public Boolean delete(K key) {
         return null;
     }
 
     @Override
-    public Long delete(Collection<Object> keys) {
+    public Long delete(Collection<K> keys) {
         return null;
     }
 
     @Override
-    public String get(Object key) {
-        return (String) this.strGet(key);
-    }
-
-    @Override
-    public List<String> multiGet(Collection<String> keys) {
+    public Collection<V> scan(String pattern) {
         return null;
-    }
-
-    @Override
-    public void set(String key, String value) {
-
-    }
-
-    @Override
-    public void set(String key, String value, long timeout, TimeUnit unit) {
-
     }
 
     @Override
@@ -101,7 +91,7 @@ public class RedisCommandServiceImpl extends DefaultNettyExecuteService implemen
     }
 
     @Override
-    public List<Object> range(String key, long start, long end) {
+    public List<V> range(String key, long start, long end) {
         return null;
     }
 
@@ -121,7 +111,7 @@ public class RedisCommandServiceImpl extends DefaultNettyExecuteService implemen
     }
 
     @Override
-    public Long rightPushAll(Object key, Collection<Object> values) {
+    public Long rightPushAll(K key, Collection<Object> values) {
         return null;
     }
 
@@ -158,5 +148,45 @@ public class RedisCommandServiceImpl extends DefaultNettyExecuteService implemen
     @Override
     public Long remove(String key, Object... values) {
         return null;
+    }
+
+    @Override
+    public ValueOperations<K, V> opsForValue() {
+        return valueOps;
+    }
+
+    public <T> T execute(RedisCallback<T> action, boolean exposeConnection) {
+        return execute(action, exposeConnection, false);
+    }
+
+    public <T> T execute(RedisCallback<T> action, boolean exposeConnection, boolean pipeline) {
+        Assert.notNull(action, "Callback object must not be null");
+
+        // 获取连接
+        RedisConnectionFactory factory = new DefaultRedisConnectionFactory();
+        RedisConnection conn = RedisConnectionUtils.getConnection(factory);
+
+        try {
+
+            RedisConnection connToUse = preProcessConnection(conn);
+
+            // open pipeline
+
+            T result = action.doInRedis(connToUse);
+
+            // close pipeline
+
+            return postProcessResult(result, connToUse);
+        } finally {
+//            RedisConnectionUtils.releaseConnection(conn, factory, enableTransactionSupport);
+        }
+    }
+
+    protected RedisConnection preProcessConnection(RedisConnection connection) {
+        return connection;
+    }
+
+    protected <T> T postProcessResult(@Nullable T result, RedisConnection conn) {
+        return result;
     }
 }

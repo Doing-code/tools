@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author cristina
  */
-public interface RedisCommandService<K, V> {
+public interface RedisOperations<K, V> {
 
     // 通用命令
 
@@ -60,41 +60,15 @@ public interface RedisCommandService<K, V> {
      */
     Long delete(Collection<K> keys);
 
+    /**
+     * 获取 key
+     *
+     * @param pattern
+     * @return
+     */
+    Collection<V> scan(String pattern);
+
     // string
-
-    /**
-     * 获取 value
-     *
-     * @param key 键
-     * @return
-     */
-    String get(Object key);
-
-    /**
-     * 批量获取
-     *
-     * @param keys 键
-     * @return
-     */
-    List<String> multiGet(Collection<String> keys);
-
-    /**
-     * 添加 key
-     *
-     * @param key   键
-     * @param value 值
-     */
-    void set(String key, String value);
-
-    /**
-     * 添加 key，并设置有效时间
-     *
-     * @param key     键
-     * @param value   值
-     * @param timeout 失效时间
-     * @param unit    时间单位
-     */
-    void set(String key, String value, long timeout, TimeUnit unit);
 
     // hash
 
@@ -273,5 +247,12 @@ public interface RedisCommandService<K, V> {
     Long remove(String key, Object... values);
 
     // zset
+
+    /**
+     * string
+     *
+     * @return
+     */
+    ValueOperations<K, V> opsForValue();
 
 }
