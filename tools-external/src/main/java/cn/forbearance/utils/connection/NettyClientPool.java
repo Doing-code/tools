@@ -86,14 +86,14 @@ public class NettyClientPool {
     }
 
     public static void main(String[] args) throws Exception {
-        RedisTemplate<Object, Object> service = new RedisTemplate<Object, Object>();
+        RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<Object, Object>();
 
-        System.out.println("> " + service.opsForValue().get("name"));
-
-        service.opsForValue().set("age", 18);
-        service.opsForValue().set("name", "jack");
-//
-        System.out.println("> " + service.opsForValue().get("name"));
+//        System.out.println("> " + service.opsForValue().get("name"));
+        System.out.println("> " + redisTemplate.scan(null));
+//        System.out.println("> " + service.opsForValue().get("name"));
+//        service.opsForValue().set("age", 0);
+//        service.opsForValue().set("name", "jack");
+//        System.out.println("> " + service.opsForValue().get("name"));
     }
 
 }

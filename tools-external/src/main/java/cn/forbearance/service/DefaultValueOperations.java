@@ -1,10 +1,20 @@
 package cn.forbearance.service;
 
+import cn.forbearance.domain.Cursor;
+import cn.forbearance.utils.AggregatedResponse;
 import cn.forbearance.utils.SyncResponseUtil;
+import cn.forbearance.utils.connection.RedisCommandHandler;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelDuplexHandler;
+import io.netty.channel.ChannelProgressivePromise;
+import io.netty.handler.codec.redis.ArrayRedisMessage;
+import io.netty.handler.codec.redis.RedisMessage;
+import io.netty.util.concurrent.DefaultPromise;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
 
@@ -23,20 +33,10 @@ public class DefaultValueOperations<K, V> extends AbstractOperations<K, V> imple
     @Override
     public V get(Object key) {
 
-        return execute(new ValueDeserializingRedisCallback(key) {
+        return execute(new CommonOperationsRedisCallback(key) {
             @Override
             protected Object inRedis(RedisConnection connection) {
-                Channel channel = connection.getChannel();
-                // 业务逻辑
-                channel.writeAndFlush("get " + key);
-                LinkedBlockingDeque<Object> deque = SyncResponseUtil.SYNC_RESULT.get(channel.id());
-                Object res = null;
-                try {
-                    res = deque.poll(3, TimeUnit.MINUTES);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                return res;
+                return connection.get(key);
             }
         });
     }
@@ -48,17 +48,10 @@ public class DefaultValueOperations<K, V> extends AbstractOperations<K, V> imple
 
     @Override
     public void set(K key, V value) {
-        execute(new ValueDeserializingRedisCallback(key) {
+        execute(new CommonOperationsRedisCallback(key) {
             @Override
             protected Object inRedis(RedisConnection connection) {
-                // 业务逻辑
-                Channel channel = connection.getChannel();
-                channel.writeAndFlush("set " + " " + key + " " + value);
-                try {
-                    SyncResponseUtil.SYNC_RESULT.get(channel.id()).poll(3, TimeUnit.MINUTES);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                connection.set(key, value);
                 return null;
             }
         });

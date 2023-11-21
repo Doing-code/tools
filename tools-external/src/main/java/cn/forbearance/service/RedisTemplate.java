@@ -1,7 +1,12 @@
 package cn.forbearance.service;
 
+import cn.forbearance.domain.Cursor;
 import cn.forbearance.utils.RedisConnectionUtils;
+import cn.forbearance.utils.SyncResponseUtil;
 import cn.forbearance.utils.enums.DataType;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.util.concurrent.Promise;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
@@ -9,6 +14,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -20,9 +26,13 @@ public class RedisTemplate<K, V> implements RedisOperations<K, V> {
 
     /**
      * TODO 需要将 Netty 连接优化为连接池
-     *
      */
     public RedisTemplate() {
+    }
+
+    @Override
+    public <T> T execute(RedisCallback<T> action) {
+        return execute(action, true);
     }
 
     @Override
@@ -51,8 +61,8 @@ public class RedisTemplate<K, V> implements RedisOperations<K, V> {
     }
 
     @Override
-    public Collection<V> scan(String pattern) {
-        return null;
+    public Cursor<V> scan(String pattern) {
+        return (Cursor<V>) execute(connection -> connection.scan(pattern));
     }
 
     @Override

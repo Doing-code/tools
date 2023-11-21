@@ -8,6 +8,13 @@ import org.springframework.lang.Nullable;
  */
 public interface RedisCallback<T> {
 
+    /**
+     * 执行命令
+     *
+     * @param connection
+     * @return
+     * @throws DataAccessException
+     */
     @Nullable
     T doInRedis(RedisConnection connection) throws DataAccessException;
 }

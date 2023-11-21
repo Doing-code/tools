@@ -21,6 +21,14 @@
     
     - 服务端的 Redis 面板已实现字符串 get。但是测试时 100 个线程并发获取 key 时，报错 `[Finalizer] DEBUG io.netty.buffer.PoolThreadCache - Freed 1 thread-local buffer(s) from thread: Finalizer`。第一版先这样，先把功能实现了，然后再谈优化。
     
+- 2023-11-22
+
+    - 解决同步获取 Redis 响应的数据，基于 Netty 提供的 Promise 实现。
+    
+    - 解决连接池问题，基于 Netty 提供的 FixedChannelPool 实现。
+    
+    - 实现 get、set、scan 三个命令的请求。
+    
 ## 功能开发
 
 - [ ] Redis 可视化

@@ -7,11 +7,11 @@ import org.springframework.lang.Nullable;
  */
 public class AbstractOperations<K, V> {
 
-    abstract class ValueDeserializingRedisCallback implements RedisCallback<V> {
+    abstract class CommonOperationsRedisCallback implements RedisCallback<V> {
 
         private Object key;
 
-        public ValueDeserializingRedisCallback(Object key) {
+        public CommonOperationsRedisCallback(Object key) {
             this.key = key;
         }
 

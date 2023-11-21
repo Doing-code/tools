@@ -1,8 +1,12 @@
 package cn.forbearance.utils;
 
+import cn.forbearance.domain.Cursor;
 import io.netty.handler.codec.CodecException;
 import io.netty.handler.codec.redis.*;
 import io.netty.util.CharsetUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author cristina
@@ -19,13 +23,22 @@ public class AggregatedResponse {
         } else if (msg instanceof FullBulkStringRedisMessage) {
             return getString((FullBulkStringRedisMessage) msg);
         } else if (msg instanceof ArrayRedisMessage) {
-            for (RedisMessage child : ((ArrayRedisMessage) msg).children()) {
-                aggregatedRedisResponse(child);
-            }
-        } else {
-            throw new CodecException("unknown message type: " + msg);
+            return msg;
         }
-        return null;
+        throw new CodecException("unknown message type: " + msg);
+    }
+
+    public static Cursor<Object> parseScan(ArrayRedisMessage message) {
+        RedisMessage cursor0 = message.children().remove(0);
+        Object position = AggregatedResponse.aggregatedRedisResponse(cursor0);
+
+        ArrayRedisMessage arrayRedisMessage = (ArrayRedisMessage) message.children().get(message.children().size() - 1);
+
+        List<Object> ele = new ArrayList<>();
+        for (RedisMessage child : arrayRedisMessage.children()) {
+            ele.add(AggregatedResponse.aggregatedRedisResponse(child));
+        }
+        return new Cursor<>((String) position, ele);
     }
 
     private static String getString(FullBulkStringRedisMessage msg) {

@@ -1,5 +1,6 @@
 package cn.forbearance.service;
 
+import cn.forbearance.domain.Cursor;
 import cn.forbearance.utils.enums.DataType;
 
 import java.util.Collection;
@@ -14,6 +15,14 @@ import java.util.concurrent.TimeUnit;
  * @author cristina
  */
 public interface RedisOperations<K, V> {
+
+    /**
+     * .
+     * @param action
+     * @param <T>
+     * @return
+     */
+    <T> T execute(RedisCallback<T> action);
 
     // 通用命令
 
@@ -61,12 +70,12 @@ public interface RedisOperations<K, V> {
     Long delete(Collection<K> keys);
 
     /**
-     * 获取 key
+     * 查询匹配 key, 默认查询所有 key
      *
      * @param pattern
      * @return
      */
-    Collection<V> scan(String pattern);
+    Cursor<V> scan(String pattern);
 
     // string
 
