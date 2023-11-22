@@ -1,15 +1,16 @@
-package cn.forbearance.service;
+package cn.forbearance.service.redis;
 
 import cn.forbearance.domain.Cursor;
 import cn.forbearance.domain.RedisServer;
 import cn.forbearance.utils.AggregatedResponse;
 import cn.forbearance.utils.connection.NettyClientPool;
 import cn.forbearance.utils.connection.RedisCommandHandler;
+import cn.hutool.core.util.StrUtil;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.redis.ArrayRedisMessage;
 import io.netty.util.concurrent.DefaultPromise;
 
-import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author cristina
@@ -75,11 +76,12 @@ public class DefaultRedisConnection implements RedisConnection {
         try {
             // scan 0 match key count 100
             StringBuilder command = new StringBuilder();
-            command.append("scan");
-            if (Objects.nonNull(pattern) && pattern.length() > 0) {
+            command.append("scan ").append(position);
+
+            if (StrUtil.isNotEmpty(pattern)) {
                 command.append(" match ").append(pattern);
             }
-            command.append(" ").append(position);
+
             command.append(" count ").append(count);
 
             getHandler().sendCommand(channel(), command.toString(), getPromise());
@@ -107,6 +109,26 @@ public class DefaultRedisConnection implements RedisConnection {
     @Override
     public void set(Object key, Object value) {
         getHandler().sendCommand(channel(), "set " + key + " " + value, getPromise());
+        try {
+            getPromise().get();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void setEx(Object key, Object value, long timeout, TimeUnit unit) {
+        getHandler().sendCommand(channel(), "set " + key + " " + value + " ex " + timeout, getPromise());
+        try {
+            getPromise().get();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void delete(Object key) {
+        getHandler().sendCommand(channel(), "del " + key, getPromise());
         try {
             getPromise().get();
         } catch (Exception e) {

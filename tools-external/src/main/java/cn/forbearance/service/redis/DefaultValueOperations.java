@@ -1,4 +1,4 @@
-package cn.forbearance.service;
+package cn.forbearance.service.redis;
 
 import cn.forbearance.domain.RedisServer;
 
@@ -47,6 +47,23 @@ public class DefaultValueOperations<K, V> extends AbstractOperations<K, V> imple
 
     @Override
     public void set(K key, V value, long timeout, TimeUnit unit, RedisServer server) {
+        execute(new CommonOperationsRedisCallback(key) {
+            @Override
+            protected Object inRedis(RedisConnection connection) {
+                connection.setEx(key, value, timeout, unit);
+                return null;
+            }
+        }, server);
+    }
 
+    @Override
+    public void delete(K key, RedisServer server) {
+        execute(new CommonOperationsRedisCallback(key) {
+            @Override
+            protected Object inRedis(RedisConnection connection) {
+                connection.delete(key);
+                return null;
+            }
+        }, server);
     }
 }

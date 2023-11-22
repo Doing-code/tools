@@ -1,4 +1,4 @@
-package cn.forbearance.service;
+package cn.forbearance.service.redis;
 
 import cn.forbearance.domain.Cursor;
 import cn.forbearance.domain.RedisServer;

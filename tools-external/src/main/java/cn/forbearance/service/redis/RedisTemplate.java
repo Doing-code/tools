@@ -1,4 +1,4 @@
-package cn.forbearance.service;
+package cn.forbearance.service.redis;
 
 import cn.forbearance.domain.Cursor;
 import cn.forbearance.domain.RedisServer;
@@ -8,6 +8,7 @@ import cn.forbearance.utils.enums.DataType;
 import io.netty.channel.Channel;
 import io.netty.util.concurrent.DefaultPromise;
 import org.springframework.lang.Nullable;
+import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.util.Collection;

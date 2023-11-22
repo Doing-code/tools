@@ -1,4 +1,4 @@
-package cn.forbearance.service;
+package cn.forbearance.service.redis;
 
 import cn.forbearance.domain.RedisServer;
 
@@ -48,4 +48,12 @@ public interface ValueOperations<K, V> {
      * @param server  指定 server 连接
      */
     void set(K key, V value, long timeout, TimeUnit unit, RedisServer server);
+
+    /**
+     * 删除 key
+     *
+     * @param key
+     * @param server
+     */
+    void delete(K key, RedisServer server);
 }

@@ -1,10 +1,12 @@
-package cn.forbearance.service;
+package cn.forbearance.service.redis;
 
 import cn.forbearance.domain.Cursor;
 import cn.forbearance.domain.RedisServer;
 import cn.forbearance.utils.connection.RedisCommandHandler;
 import io.netty.channel.Channel;
 import io.netty.util.concurrent.DefaultPromise;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author cristina
@@ -102,4 +104,21 @@ public interface RedisConnection {
      * @param value
      */
     void set(Object key, Object value);
+
+    /**
+     * set expire，默认按照秒设置
+     *
+     * @param key
+     * @param value
+     * @param timeout
+     * @param unit
+     */
+    void setEx(Object key, Object value, long timeout, TimeUnit unit);
+
+    /**
+     * 删除 key
+     *
+     * @param key
+     */
+    void delete(Object key);
 }

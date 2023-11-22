@@ -1,4 +1,4 @@
-package cn.forbearance.service;
+package cn.forbearance.service.redis;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.lang.Nullable;
