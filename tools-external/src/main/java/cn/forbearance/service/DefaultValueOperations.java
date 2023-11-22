@@ -1,21 +1,9 @@
 package cn.forbearance.service;
 
-import cn.forbearance.domain.Cursor;
-import cn.forbearance.utils.AggregatedResponse;
-import cn.forbearance.utils.SyncResponseUtil;
-import cn.forbearance.utils.connection.RedisCommandHandler;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelDuplexHandler;
-import io.netty.channel.ChannelProgressivePromise;
-import io.netty.handler.codec.redis.ArrayRedisMessage;
-import io.netty.handler.codec.redis.RedisMessage;
-import io.netty.util.concurrent.DefaultPromise;
+import cn.forbearance.domain.RedisServer;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -31,34 +19,34 @@ public class DefaultValueOperations<K, V> extends AbstractOperations<K, V> imple
     }
 
     @Override
-    public V get(Object key) {
+    public V get(Object key, RedisServer server) {
 
         return execute(new CommonOperationsRedisCallback(key) {
             @Override
             protected Object inRedis(RedisConnection connection) {
                 return connection.get(key);
             }
-        });
+        }, server);
     }
 
     @Override
-    public List<V> multiGet(Collection<K> keys) {
+    public List<V> multiGet(Collection<K> keys, RedisServer server) {
         return null;
     }
 
     @Override
-    public void set(K key, V value) {
+    public void set(K key, V value, RedisServer server) {
         execute(new CommonOperationsRedisCallback(key) {
             @Override
             protected Object inRedis(RedisConnection connection) {
                 connection.set(key, value);
                 return null;
             }
-        });
+        }, server);
     }
 
     @Override
-    public void set(K key, V value, long timeout, TimeUnit unit) {
+    public void set(K key, V value, long timeout, TimeUnit unit, RedisServer server) {
 
     }
 }

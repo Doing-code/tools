@@ -1,5 +1,6 @@
 package cn.forbearance.service;
 
+import cn.forbearance.domain.RedisServer;
 import org.springframework.lang.Nullable;
 
 /**
@@ -36,7 +37,7 @@ public class AbstractOperations<K, V> {
         this.template = template;
     }
 
-    <T> T execute(RedisCallback<T> callback) {
-        return template.execute(callback, true);
+    <T> T execute(RedisCallback<T> callback, RedisServer server) {
+        return template.execute(callback, server);
     }
 }

@@ -1,7 +1,5 @@
 package cn.forbearance.utils.connection;
 
-import cn.forbearance.service.RedisTemplate;
-import cn.forbearance.utils.SyncResponseUtil;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.AdaptiveRecvByteBufAllocator;
 import io.netty.channel.Channel;
@@ -12,13 +10,13 @@ import io.netty.channel.pool.FixedChannelPool;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.concurrent.Future;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.web.server.ServerErrorException;
 
 import java.net.InetSocketAddress;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  * Netty 连接池
@@ -34,9 +32,9 @@ public class NettyClientPool {
 
     final Bootstrap bootstrap = new Bootstrap();
 
-    public static final ConcurrentHashMap<Long, CompletableFuture<String>> requestMap = new ConcurrentHashMap<>();
+    private static final Map<InetSocketAddress, FixedChannelPool> CONNECTION_POOLS = new ConcurrentHashMap<>(16);
 
-    volatile private static Map<InetSocketAddress, FixedChannelPool> pools = new ConcurrentHashMap<>(16);
+    private static final Map<String, InetSocketAddress> pools = new ConcurrentHashMap<>(16);
 
     private NettyClientPool() {
         connection();
@@ -66,34 +64,47 @@ public class NettyClientPool {
                 .option(ChannelOption.SO_KEEPALIVE, true)
                 .option(ChannelOption.RCVBUF_ALLOCATOR,
                         new AdaptiveRecvByteBufAllocator(1024 * 2, 1024 * 10, 1024 * 1024));
-
-        InetSocketAddress address = new InetSocketAddress("localhost", 6379);
-        pools.put(address, new FixedChannelPool(bootstrap.remoteAddress(address), new RedisChannelHandler(), 10, 10));
     }
 
     public Channel getConnection(InetSocketAddress address) throws ServerErrorException {
+        return getChannel(address);
+    }
+
+    public Channel getConnection(String localhost, int port) throws ServerErrorException {
+        InetSocketAddress address = getInetSocketAddress(localhost, port);
+
+        return getChannel(address);
+    }
+
+    @Nullable
+    private Channel getChannel(InetSocketAddress address) {
         Channel channel = null;
         try {
-            FixedChannelPool pool = pools.get(address);
+            FixedChannelPool pool = getFixedChannelPool(address);
             Future<Channel> future = pool.acquire();
             channel = future.get();
-
-            SyncResponseUtil.SYNC_RESULT.computeIfAbsent(channel.id(), key -> new LinkedBlockingDeque<>());
         } catch (Exception e) {
             e.printStackTrace();
         }
         return channel;
     }
 
-    public static void main(String[] args) throws Exception {
-        RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<Object, Object>();
+    public static void release(Channel ch, String localhost, int port) {
+        if (Objects.isNull(ch)) {
+            return;
+        }
+        ch.flush();
+        CONNECTION_POOLS.get(getInetSocketAddress(localhost, port)).release(ch);
+    }
 
-//        System.out.println("> " + service.opsForValue().get("name"));
-        System.out.println("> " + redisTemplate.scan(null));
-//        System.out.println("> " + service.opsForValue().get("name"));
-//        service.opsForValue().set("age", 0);
-//        service.opsForValue().set("name", "jack");
-//        System.out.println("> " + service.opsForValue().get("name"));
+    public static InetSocketAddress getInetSocketAddress(String localhost, int port) {
+        return pools.computeIfAbsent(localhost + ":" + port, v -> new InetSocketAddress(localhost, port));
+    }
+
+    public FixedChannelPool getFixedChannelPool(InetSocketAddress address) {
+        return CONNECTION_POOLS.computeIfAbsent(address, v -> {
+            return new FixedChannelPool(bootstrap.remoteAddress(address), new RedisChannelHandler(), 200, Integer.MAX_VALUE);
+        });
     }
 
 }

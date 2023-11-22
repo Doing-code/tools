@@ -1,6 +1,7 @@
 package cn.forbearance.service;
 
 import cn.forbearance.domain.Cursor;
+import cn.forbearance.domain.RedisServer;
 import cn.forbearance.utils.AggregatedResponse;
 import cn.forbearance.utils.connection.NettyClientPool;
 import cn.forbearance.utils.connection.RedisCommandHandler;
@@ -8,7 +9,6 @@ import io.netty.channel.Channel;
 import io.netty.handler.codec.redis.ArrayRedisMessage;
 import io.netty.util.concurrent.DefaultPromise;
 
-import java.net.InetSocketAddress;
 import java.util.Objects;
 
 /**
@@ -16,12 +16,53 @@ import java.util.Objects;
  */
 public class DefaultRedisConnection implements RedisConnection {
 
+    private RedisServer server;
+    private RedisCommandHandler handler;
+    private DefaultPromise<Object> promise;
+    private Channel channel;
+
     public DefaultRedisConnection() {
     }
 
     @Override
-    public Channel getChannel() {
-        return NettyClientPool.getInstance().getConnection(new InetSocketAddress("localhost", 6379));
+    public Channel getConnection() {
+        channel = NettyClientPool.getInstance().getConnection(server.getIp(), server.getPort());
+        return channel;
+    }
+
+    @Override
+    public void release(Channel ch, String localhost, int port) {
+        NettyClientPool.release(ch, localhost, port);
+    }
+
+    @Override
+    public Channel channel() {
+        return channel;
+    }
+
+    @Override
+    public void setRedisServer(RedisServer server) {
+        this.server = server;
+    }
+
+    @Override
+    public void setHandler(RedisCommandHandler handler) {
+        this.handler = handler;
+    }
+
+    @Override
+    public void setPromise(DefaultPromise<Object> promise) {
+        this.promise = promise;
+    }
+
+    @Override
+    public RedisCommandHandler getHandler() {
+        return handler;
+    }
+
+    @Override
+    public DefaultPromise<Object> getPromise() {
+        return promise;
     }
 
     @Override
@@ -40,7 +81,10 @@ public class DefaultRedisConnection implements RedisConnection {
             }
             command.append(" ").append(position);
             command.append(" count ").append(count);
-            Object msg = doExec(command.toString()).get();
+
+            getHandler().sendCommand(channel(), command.toString(), getPromise());
+
+            Object msg = getPromise().get();
 
             return AggregatedResponse.parseScan((ArrayRedisMessage) msg);
         } catch (Exception e) {
@@ -52,7 +96,8 @@ public class DefaultRedisConnection implements RedisConnection {
     @Override
     public Object get(Object key) {
         try {
-            return doExec("get " + key).get();
+            getHandler().sendCommand(channel(), "get " + key, getPromise());
+            return getPromise().get();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -61,18 +106,11 @@ public class DefaultRedisConnection implements RedisConnection {
 
     @Override
     public void set(Object key, Object value) {
-        Channel channel = getChannel();
-        DefaultPromise<Object> promise = new DefaultPromise<Object>(channel.eventLoop());
-        RedisCommandHandler handler = channel.pipeline().get(RedisCommandHandler.class);
-        handler.sendCommand(channel, "set " + key + value, promise);
-    }
-
-    protected DefaultPromise<Object> doExec(String command) {
-        Channel channel = getChannel();
-        DefaultPromise<Object> promise = new DefaultPromise<Object>(channel.eventLoop());
-        RedisCommandHandler handler = channel.pipeline().get(RedisCommandHandler.class);
-        handler.sendCommand(channel, command, promise);
-
-        return promise;
+        getHandler().sendCommand(channel(), "set " + key + " " + value, getPromise());
+        try {
+            getPromise().get();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
