@@ -1,7 +1,7 @@
 package cn.forbearance.service.redis;
 
 import cn.forbearance.domain.Cursor;
-import cn.forbearance.domain.RedisServer;
+import cn.forbearance.domain.RedisInfo;
 import cn.forbearance.utils.connection.RedisCommandHandler;
 import io.netty.channel.Channel;
 import io.netty.util.concurrent.DefaultPromise;
@@ -41,7 +41,7 @@ public interface RedisConnection {
      *
      * @param server
      */
-    void setRedisServer(RedisServer server);
+    void setRedisServer(RedisInfo server);
 
     /**
      * set执行 handler

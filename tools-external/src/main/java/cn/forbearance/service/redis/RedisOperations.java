@@ -1,7 +1,7 @@
 package cn.forbearance.service.redis;
 
 import cn.forbearance.domain.Cursor;
-import cn.forbearance.domain.RedisServer;
+import cn.forbearance.domain.RedisInfo;
 import cn.forbearance.utils.enums.DataType;
 
 import java.util.Collection;
@@ -24,7 +24,7 @@ public interface RedisOperations<K, V> {
      * @param <T>
      * @return
      */
-    <T> T execute(RedisCallback<T> action, RedisServer server);
+    <T> T execute(RedisCallback<T> action, RedisInfo server);
 
     // 通用命令
 
@@ -35,7 +35,7 @@ public interface RedisOperations<K, V> {
      * @param server 用于动态连接Redis
      * @return
      */
-    DataType type(K key, RedisServer server);
+    DataType type(K key, RedisInfo server);
 
     /**
      * 指定缓存失效时间
@@ -46,7 +46,7 @@ public interface RedisOperations<K, V> {
      * @param server  用于动态连接Redis
      * @return
      */
-    Boolean expire(K key, long timeout, TimeUnit unit, RedisServer server);
+    Boolean expire(K key, long timeout, TimeUnit unit, RedisInfo server);
 
     /**
      * 根据 key 获取过期时间
@@ -56,7 +56,7 @@ public interface RedisOperations<K, V> {
      * @param server   用于动态连接Redis
      * @return
      */
-    Long getExpire(K key, final TimeUnit timeUnit, RedisServer server);
+    Long getExpire(K key, final TimeUnit timeUnit, RedisInfo server);
 
     /**
      * 删除一个 key
@@ -65,7 +65,7 @@ public interface RedisOperations<K, V> {
      * @param server 用于动态连接Redis
      * @return
      */
-    Boolean delete(K key, RedisServer server);
+    Boolean delete(K key, RedisInfo server);
 
     /**
      * 删除多个 key
@@ -74,7 +74,7 @@ public interface RedisOperations<K, V> {
      * @param server 用于动态连接Redis
      * @return
      */
-    Long delete(Collection<K> keys, RedisServer server);
+    Long delete(Collection<K> keys, RedisInfo server);
 
     /**
      * 查询匹配 key, 默认查询所有 key
@@ -83,7 +83,7 @@ public interface RedisOperations<K, V> {
      * @param server  用于动态连接Redis
      * @return
      */
-    Cursor<V> scan(String pattern, RedisServer server);
+    Cursor<V> scan(String pattern, RedisInfo server);
 
     /**
      * 分页查询 key
@@ -94,7 +94,7 @@ public interface RedisOperations<K, V> {
      * @param server   用于动态连接Redis
      * @return
      */
-    Cursor<V> scan(String pattern, int position, int count, RedisServer server);
+    Cursor<V> scan(String pattern, int position, int count, RedisInfo server);
 
     // string
 
@@ -108,7 +108,7 @@ public interface RedisOperations<K, V> {
      * @param server  用于动态连接Redis
      * @return
      */
-    Object hGet(String key, Object hashKey, RedisServer server);
+    Object hGet(String key, Object hashKey, RedisInfo server);
 
     /**
      * 获取 key 对应的所有键值
@@ -117,7 +117,7 @@ public interface RedisOperations<K, V> {
      * @param server 用于动态连接Redis
      * @return
      */
-    Map<Object, Object> entries(String key, RedisServer server);
+    Map<Object, Object> entries(String key, RedisInfo server);
 
     /**
      * HashSet
@@ -126,7 +126,7 @@ public interface RedisOperations<K, V> {
      * @param map    对应多个键值
      * @param server 用于动态连接Redis
      */
-    void hmSet(String key, Map<String, Object> map, RedisServer server);
+    void hmSet(String key, Map<String, Object> map, RedisInfo server);
 
     /**
      * HashSet 并设置有效时间
@@ -137,7 +137,7 @@ public interface RedisOperations<K, V> {
      * @param server 用于动态连接Redis
      * @return
      */
-    boolean hmSet(String key, Map<String, Object> map, long time, RedisServer server);
+    boolean hmSet(String key, Map<String, Object> map, long time, RedisInfo server);
 
     /**
      * 向一张 hash 表中放入数据, 如果不存在将创建
@@ -148,7 +148,7 @@ public interface RedisOperations<K, V> {
      * @param server 用于动态连接Redis
      * @return
      */
-    boolean hSet(String key, String item, Object value, RedisServer server);
+    boolean hSet(String key, String item, Object value, RedisInfo server);
 
     /**
      * 删除 hash 表中的值
@@ -158,7 +158,7 @@ public interface RedisOperations<K, V> {
      * @param item   项，可以传入多个
      * @return
      */
-    Long hDel(String key, RedisServer server, Object... item);
+    Long hDel(String key, RedisInfo server, Object... item);
 
     /**
      * 判断 hash 表中是否有该项的值
@@ -168,7 +168,7 @@ public interface RedisOperations<K, V> {
      * @param server  用于动态连接Redis
      * @return
      */
-    Boolean hasKey(String key, Object hashKey, RedisServer server);
+    Boolean hasKey(String key, Object hashKey, RedisInfo server);
 
     // list
 
@@ -181,7 +181,7 @@ public interface RedisOperations<K, V> {
      * @param server 用于动态连接Redis
      * @return
      */
-    List<V> range(String key, long start, long end, RedisServer server);
+    List<V> range(String key, long start, long end, RedisInfo server);
 
     /**
      * 获取 list 缓存的长度
@@ -190,7 +190,7 @@ public interface RedisOperations<K, V> {
      * @param server 用于动态连接Redis
      * @return
      */
-    Long lGetListSize(String key, RedisServer server);
+    Long lGetListSize(String key, RedisInfo server);
 
     /**
      * 通过索引 获取 list 中的值
@@ -200,7 +200,7 @@ public interface RedisOperations<K, V> {
      * @param server 用于动态连接Redis
      * @return
      */
-    Object lGetIndex(String key, long index, RedisServer server);
+    Object lGetIndex(String key, long index, RedisInfo server);
 
     /**
      * 将 list 放入缓存
@@ -210,7 +210,7 @@ public interface RedisOperations<K, V> {
      * @param server 用于动态连接Redis
      * @return
      */
-    Long rightPush(String key, Object value, RedisServer server);
+    Long rightPush(String key, Object value, RedisInfo server);
 
     /**
      * 将 list 放入缓存
@@ -220,7 +220,7 @@ public interface RedisOperations<K, V> {
      * @param server 用于动态连接Redis
      * @return
      */
-    Long rightPushAll(K key, Collection<Object> values, RedisServer server);
+    Long rightPushAll(K key, Collection<Object> values, RedisInfo server);
 
     /**
      * 根据索引修改 list 中的某条数据
@@ -230,7 +230,7 @@ public interface RedisOperations<K, V> {
      * @param value  值
      * @param server 用于动态连接Redis
      */
-    void lUpdateIndex(String key, long index, Object value, RedisServer server);
+    void lUpdateIndex(String key, long index, Object value, RedisInfo server);
 
     /**
      * 移除 count 个值为value
@@ -241,7 +241,7 @@ public interface RedisOperations<K, V> {
      * @param server 用于动态连接Redis
      * @return
      */
-    Long lRemove(String key, long count, Object value, RedisServer server);
+    Long lRemove(String key, long count, Object value, RedisInfo server);
 
     // set
 
@@ -252,7 +252,7 @@ public interface RedisOperations<K, V> {
      * @param server 用于动态连接Redis
      * @return
      */
-    Set<Object> members(String key, RedisServer server);
+    Set<Object> members(String key, RedisInfo server);
 
     /**
      * 根据value从一个set中查询, 是否存在
@@ -262,7 +262,7 @@ public interface RedisOperations<K, V> {
      * @param server 用于动态连接Redis
      * @return
      */
-    Boolean isMember(String key, Object value, RedisServer server);
+    Boolean isMember(String key, Object value, RedisInfo server);
 
     /**
      * 将数据放入 set 缓存
@@ -272,7 +272,7 @@ public interface RedisOperations<K, V> {
      * @param values 值，可以是多个
      * @return
      */
-    Long add(String key, RedisServer server, Object... values);
+    Long add(String key, RedisInfo server, Object... values);
 
     /**
      * 获取 set 缓存的长度
@@ -281,7 +281,7 @@ public interface RedisOperations<K, V> {
      * @param server 用于动态连接Redis
      * @return
      */
-    Long size(String key, RedisServer server);
+    Long size(String key, RedisInfo server);
 
     /**
      * 将 values 从 set 中移除
@@ -291,7 +291,7 @@ public interface RedisOperations<K, V> {
      * @param server 用于动态连接Redis
      * @return
      */
-    Long remove(String key, RedisServer server, Object... values);
+    Long remove(String key, RedisInfo server, Object... values);
 
     // zset
 

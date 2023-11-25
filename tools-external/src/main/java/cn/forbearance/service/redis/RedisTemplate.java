@@ -1,14 +1,13 @@
 package cn.forbearance.service.redis;
 
 import cn.forbearance.domain.Cursor;
-import cn.forbearance.domain.RedisServer;
+import cn.forbearance.domain.RedisInfo;
 import cn.forbearance.utils.RedisConnectionUtils;
 import cn.forbearance.utils.connection.RedisCommandHandler;
 import cn.forbearance.utils.enums.DataType;
 import io.netty.channel.Channel;
 import io.netty.util.concurrent.DefaultPromise;
 import org.springframework.lang.Nullable;
-import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.util.Collection;
@@ -31,137 +30,137 @@ public class RedisTemplate<K, V> implements RedisOperations<K, V> {
     }
 
     @Override
-    public <T> T execute(RedisCallback<T> action, RedisServer server) {
+    public <T> T execute(RedisCallback<T> action, RedisInfo server) {
         return execute(action, server, true);
     }
 
     @Override
-    public DataType type(K key, RedisServer server) {
+    public DataType type(K key, RedisInfo server) {
         return null;
     }
 
     @Override
-    public Boolean expire(K key, long timeout, TimeUnit unit, RedisServer server) {
+    public Boolean expire(K key, long timeout, TimeUnit unit, RedisInfo server) {
         return null;
     }
 
     @Override
-    public Long getExpire(K key, TimeUnit timeUnit, RedisServer server) {
+    public Long getExpire(K key, TimeUnit timeUnit, RedisInfo server) {
         return null;
     }
 
     @Override
-    public Boolean delete(K key, RedisServer server) {
+    public Boolean delete(K key, RedisInfo server) {
         return null;
     }
 
     @Override
-    public Long delete(Collection<K> keys, RedisServer server) {
+    public Long delete(Collection<K> keys, RedisInfo server) {
         return null;
     }
 
     @Override
-    public Cursor<V> scan(String pattern, RedisServer server) {
+    public Cursor<V> scan(String pattern, RedisInfo server) {
         return scan(pattern, 0, Integer.MAX_VALUE, server);
     }
 
     @Override
-    public Cursor<V> scan(String pattern, int position, int count, RedisServer server) {
+    public Cursor<V> scan(String pattern, int position, int count, RedisInfo server) {
         return (Cursor<V>) execute(connection -> connection.scan(pattern, position, count), server);
     }
 
     @Override
-    public Object hGet(String key, Object hashKey, RedisServer server) {
+    public Object hGet(String key, Object hashKey, RedisInfo server) {
         return null;
     }
 
     @Override
-    public Map<Object, Object> entries(String key, RedisServer server) {
+    public Map<Object, Object> entries(String key, RedisInfo server) {
         return null;
     }
 
     @Override
-    public void hmSet(String key, Map<String, Object> map, RedisServer server) {
+    public void hmSet(String key, Map<String, Object> map, RedisInfo server) {
 
     }
 
     @Override
-    public boolean hmSet(String key, Map<String, Object> map, long time, RedisServer server) {
+    public boolean hmSet(String key, Map<String, Object> map, long time, RedisInfo server) {
         return false;
     }
 
     @Override
-    public boolean hSet(String key, String item, Object value, RedisServer server) {
+    public boolean hSet(String key, String item, Object value, RedisInfo server) {
         return false;
     }
 
     @Override
-    public Long hDel(String key, RedisServer server, Object... item) {
+    public Long hDel(String key, RedisInfo server, Object... item) {
         return null;
     }
 
     @Override
-    public Boolean hasKey(String key, Object hashKey, RedisServer server) {
+    public Boolean hasKey(String key, Object hashKey, RedisInfo server) {
         return null;
     }
 
     @Override
-    public List<V> range(String key, long start, long end, RedisServer server) {
+    public List<V> range(String key, long start, long end, RedisInfo server) {
         return null;
     }
 
     @Override
-    public Long lGetListSize(String key, RedisServer server) {
+    public Long lGetListSize(String key, RedisInfo server) {
         return null;
     }
 
     @Override
-    public Object lGetIndex(String key, long index, RedisServer server) {
+    public Object lGetIndex(String key, long index, RedisInfo server) {
         return null;
     }
 
     @Override
-    public Long rightPush(String key, Object value, RedisServer server) {
+    public Long rightPush(String key, Object value, RedisInfo server) {
         return null;
     }
 
     @Override
-    public Long rightPushAll(K key, Collection<Object> values, RedisServer server) {
+    public Long rightPushAll(K key, Collection<Object> values, RedisInfo server) {
         return null;
     }
 
     @Override
-    public void lUpdateIndex(String key, long index, Object value, RedisServer server) {
+    public void lUpdateIndex(String key, long index, Object value, RedisInfo server) {
 
     }
 
     @Override
-    public Long lRemove(String key, long count, Object value, RedisServer server) {
+    public Long lRemove(String key, long count, Object value, RedisInfo server) {
         return null;
     }
 
     @Override
-    public Set<Object> members(String key, RedisServer server) {
+    public Set<Object> members(String key, RedisInfo server) {
         return null;
     }
 
     @Override
-    public Boolean isMember(String key, Object value, RedisServer server) {
+    public Boolean isMember(String key, Object value, RedisInfo server) {
         return null;
     }
 
     @Override
-    public Long add(String key, RedisServer server, Object... values) {
+    public Long add(String key, RedisInfo server, Object... values) {
         return null;
     }
 
     @Override
-    public Long size(String key, RedisServer server) {
+    public Long size(String key, RedisInfo server) {
         return null;
     }
 
     @Override
-    public Long remove(String key, RedisServer server, Object... values) {
+    public Long remove(String key, RedisInfo server, Object... values) {
         return null;
     }
 
@@ -174,7 +173,7 @@ public class RedisTemplate<K, V> implements RedisOperations<K, V> {
         return execute(action, server, true);
     }*/
 
-    public <T> T execute(RedisCallback<T> action, RedisServer server, boolean pipeline) {
+    public <T> T execute(RedisCallback<T> action, RedisInfo server, boolean pipeline) {
         Assert.notNull(action, "Callback object must not be null");
 
         // 获取连接
@@ -197,7 +196,7 @@ public class RedisTemplate<K, V> implements RedisOperations<K, V> {
         }
     }
 
-    protected RedisConnection preProcessConnection(RedisConnection connection, RedisServer server) {
+    protected RedisConnection preProcessConnection(RedisConnection connection, RedisInfo server) {
         connection.setRedisServer(server);
         Channel channel = connection.getConnection();
         connection.setPromise(new DefaultPromise<Object>(channel.eventLoop()));

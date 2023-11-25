@@ -1,6 +1,6 @@
 package cn.forbearance.utils;
 
-import cn.forbearance.domain.RedisServer;
+import cn.forbearance.domain.RedisInfo;
 import cn.forbearance.service.redis.RedisConnection;
 import cn.forbearance.service.redis.RedisConnectionFactory;
 import org.springframework.lang.Nullable;
@@ -19,7 +19,7 @@ public class RedisConnectionUtils {
     }
 
     public static void releaseConnection(@Nullable RedisConnection conn, RedisConnectionFactory factory,
-                                         RedisServer server) {
+                                         RedisInfo server) {
         if (conn == null) {
             return;
         }

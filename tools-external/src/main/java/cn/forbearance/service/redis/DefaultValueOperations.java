@@ -1,6 +1,6 @@
 package cn.forbearance.service.redis;
 
-import cn.forbearance.domain.RedisServer;
+import cn.forbearance.domain.RedisInfo;
 
 import java.util.Collection;
 import java.util.List;
@@ -19,7 +19,7 @@ public class DefaultValueOperations<K, V> extends AbstractOperations<K, V> imple
     }
 
     @Override
-    public V get(Object key, RedisServer server) {
+    public V get(Object key, RedisInfo server) {
 
         return execute(new CommonOperationsRedisCallback(key) {
             @Override
@@ -30,12 +30,12 @@ public class DefaultValueOperations<K, V> extends AbstractOperations<K, V> imple
     }
 
     @Override
-    public List<V> multiGet(Collection<K> keys, RedisServer server) {
+    public List<V> multiGet(Collection<K> keys, RedisInfo server) {
         return null;
     }
 
     @Override
-    public void set(K key, V value, RedisServer server) {
+    public void set(K key, V value, RedisInfo server) {
         execute(new CommonOperationsRedisCallback(key) {
             @Override
             protected Object inRedis(RedisConnection connection) {
@@ -46,7 +46,7 @@ public class DefaultValueOperations<K, V> extends AbstractOperations<K, V> imple
     }
 
     @Override
-    public void set(K key, V value, long timeout, TimeUnit unit, RedisServer server) {
+    public void set(K key, V value, long timeout, TimeUnit unit, RedisInfo server) {
         execute(new CommonOperationsRedisCallback(key) {
             @Override
             protected Object inRedis(RedisConnection connection) {
@@ -57,7 +57,7 @@ public class DefaultValueOperations<K, V> extends AbstractOperations<K, V> imple
     }
 
     @Override
-    public void delete(K key, RedisServer server) {
+    public void delete(K key, RedisInfo server) {
         execute(new CommonOperationsRedisCallback(key) {
             @Override
             protected Object inRedis(RedisConnection connection) {

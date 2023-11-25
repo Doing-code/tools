@@ -1,6 +1,6 @@
 package cn.forbearance.service.redis;
 
-import cn.forbearance.domain.RedisServer;
+import cn.forbearance.domain.RedisInfo;
 
 import java.util.Collection;
 import java.util.List;
@@ -18,7 +18,7 @@ public interface ValueOperations<K, V> {
      * @param server 指定 server 连接
      * @return
      */
-    V get(Object key, RedisServer server);
+    V get(Object key, RedisInfo server);
 
     /**
      * 批量获取
@@ -27,7 +27,7 @@ public interface ValueOperations<K, V> {
      * @param server 指定 server 连接
      * @return
      */
-    List<V> multiGet(Collection<K> keys, RedisServer server);
+    List<V> multiGet(Collection<K> keys, RedisInfo server);
 
     /**
      * 添加 key
@@ -36,7 +36,7 @@ public interface ValueOperations<K, V> {
      * @param value  值
      * @param server 指定 server 连接
      */
-    void set(K key, V value, RedisServer server);
+    void set(K key, V value, RedisInfo server);
 
     /**
      * 添加 key，并设置有效时间
@@ -47,7 +47,7 @@ public interface ValueOperations<K, V> {
      * @param unit    时间单位
      * @param server  指定 server 连接
      */
-    void set(K key, V value, long timeout, TimeUnit unit, RedisServer server);
+    void set(K key, V value, long timeout, TimeUnit unit, RedisInfo server);
 
     /**
      * 删除 key
@@ -55,5 +55,5 @@ public interface ValueOperations<K, V> {
      * @param key
      * @param server
      */
-    void delete(K key, RedisServer server);
+    void delete(K key, RedisInfo server);
 }

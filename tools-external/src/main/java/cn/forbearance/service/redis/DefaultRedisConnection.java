@@ -1,7 +1,7 @@
 package cn.forbearance.service.redis;
 
 import cn.forbearance.domain.Cursor;
-import cn.forbearance.domain.RedisServer;
+import cn.forbearance.domain.RedisInfo;
 import cn.forbearance.utils.AggregatedResponse;
 import cn.forbearance.utils.connection.NettyClientPool;
 import cn.forbearance.utils.connection.RedisCommandHandler;
@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class DefaultRedisConnection implements RedisConnection {
 
-    private RedisServer server;
+    private RedisInfo server;
     private RedisCommandHandler handler;
     private DefaultPromise<Object> promise;
     private Channel channel;
@@ -42,7 +42,7 @@ public class DefaultRedisConnection implements RedisConnection {
     }
 
     @Override
-    public void setRedisServer(RedisServer server) {
+    public void setRedisServer(RedisInfo server) {
         this.server = server;
     }
 
