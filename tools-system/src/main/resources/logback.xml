@@ -42,4 +42,9 @@
     <logger name="jdbc.audit" level="OFF" additivity="false">
         <appender-ref ref="console" />
     </logger>
+
+    <!-- 排除不需要打印的日志 -->
+    <logger name="org.apache.zookeeper.ZooKeeper" level="OFF">
+        <appender-ref ref="console" />
+    </logger>
 </configuration>

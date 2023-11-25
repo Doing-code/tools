@@ -2,7 +2,6 @@ package cn.forbearance.service.redis;
 
 import cn.forbearance.domain.Cursor;
 import cn.forbearance.domain.RedisInfo;
-import cn.forbearance.utils.connection.RedisCommandHandler;
 import io.netty.channel.Channel;
 import io.netty.util.concurrent.DefaultPromise;
 

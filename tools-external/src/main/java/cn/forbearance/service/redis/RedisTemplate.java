@@ -3,7 +3,6 @@ package cn.forbearance.service.redis;
 import cn.forbearance.domain.Cursor;
 import cn.forbearance.domain.RedisInfo;
 import cn.forbearance.utils.RedisConnectionUtils;
-import cn.forbearance.utils.connection.RedisCommandHandler;
 import cn.forbearance.utils.enums.DataType;
 import io.netty.channel.Channel;
 import io.netty.util.concurrent.DefaultPromise;

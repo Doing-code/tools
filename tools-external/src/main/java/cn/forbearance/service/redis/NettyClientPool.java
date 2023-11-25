@@ -1,4 +1,4 @@
-package cn.forbearance.utils.connection;
+package cn.forbearance.service.redis;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.AdaptiveRecvByteBufAllocator;

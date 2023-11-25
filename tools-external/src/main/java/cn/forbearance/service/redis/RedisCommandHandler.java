@@ -1,4 +1,4 @@
-package cn.forbearance.utils.connection;
+package cn.forbearance.service.redis;
 
 import cn.forbearance.utils.AggregatedResponse;
 import io.netty.buffer.ByteBufUtil;

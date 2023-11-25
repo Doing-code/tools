@@ -3,8 +3,6 @@ package cn.forbearance.service.redis;
 import cn.forbearance.domain.Cursor;
 import cn.forbearance.domain.RedisInfo;
 import cn.forbearance.utils.AggregatedResponse;
-import cn.forbearance.utils.connection.NettyClientPool;
-import cn.forbearance.utils.connection.RedisCommandHandler;
 import cn.hutool.core.util.StrUtil;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.redis.ArrayRedisMessage;
