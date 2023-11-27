@@ -1,15 +1,18 @@
 package cn.forbearance.service.impl;
 
+import cn.forbearance.domain.ZkNodeChildren;
 import cn.forbearance.domain.ZookeeperInfo;
 import cn.forbearance.service.ZookeeperConnectedService;
 import cn.forbearance.service.ZookeeperPanelService;
+import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.IdcardUtil;
 import lombok.RequiredArgsConstructor;
 import org.apache.zookeeper.data.Stat;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author cristina
@@ -21,11 +24,15 @@ public class ZookeeperPanelServiceImpl implements ZookeeperPanelService {
     private final ZookeeperConnectedService zkConnectedService;
 
     @Override
-    public List<String> getChildren(ZookeeperInfo zkInfo) {
+    public List<ZkNodeChildren> getChildren(ZookeeperInfo zkInfo) {
         try {
-            return zkConnectedService.getConnection(zkInfo.getConnectString())
+            List<String> childrenNode = zkConnectedService.getConnection(zkInfo.getConnectString())
                     .getChildren()
                     .forPath(zkInfo.getPath());
+
+            return childrenNode.stream()
+                    .map(val -> new ZkNodeChildren(IdUtil.fastSimpleUUID(), val))
+                    .collect(Collectors.toList());
         } catch (Exception e) {
             e.printStackTrace();
         }

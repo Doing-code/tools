@@ -51,10 +51,20 @@
     
     - [x] 开发 Zookeeper 可视化接口 API. 暂时仅支持查询.
     
+- 2023-11-27
+
+    - Zookeeper 可视化任务已开发完成。（仅支持查询：子节点查询、节点数据查询、节点信息查询）
+    
+    - [ ] 有时间重写一个 Zookeeper 客户端，其难点在于搞清楚 Zookeeper 通信协议，以及 Jute 的序列化和反序列化。
+    
+    - [ ] 前端需要优化。
+    
+    - 对于 Kafka 的可视化，分两种情况，KRaft、Zookeeper。（2.8版本以后用 KRaft）
+    
 ## 功能开发
 
 - [x] Redis 可视化
-- [ ] Zookeeper 可视化
+- [x] Zookeeper 可视化
 - [ ] Kafka 可视化
 - [ ] Docker 可视化
 - [ ] Kubernetes 可视化

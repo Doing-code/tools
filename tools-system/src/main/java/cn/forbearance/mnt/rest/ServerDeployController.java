@@ -2,6 +2,7 @@ package cn.forbearance.mnt.rest;
 
 import cn.forbearance.mnt.domain.ServerDeploy;
 import cn.forbearance.mnt.service.ServerDeployService;
+import cn.forbearance.mnt.service.dto.ServerDeployQueryCriteria;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -26,8 +27,8 @@ public class ServerDeployController {
 
     @ApiOperation(value = "查询服务器")
     @GetMapping
-    public ResponseEntity<List<ServerDeploy>> queryServerDeploy(){
-        return new ResponseEntity<>(serverDeployService.queryAll(), HttpStatus.OK);
+    public ResponseEntity<List<ServerDeploy>> queryServerDeploy(ServerDeployQueryCriteria criteria){
+        return new ResponseEntity<>(serverDeployService.queryAll(criteria), HttpStatus.OK);
     }
 
     @ApiOperation(value = "新增服务器")

@@ -1,5 +1,6 @@
 package cn.forbearance.service;
 
+import cn.forbearance.domain.ZkNodeChildren;
 import cn.forbearance.domain.ZookeeperInfo;
 import org.apache.zookeeper.data.Stat;
 
@@ -24,7 +25,7 @@ public interface ZookeeperPanelService {
      * @param zkInfo
      * @return
      */
-    List<String> getChildren(ZookeeperInfo zkInfo);
+    List<ZkNodeChildren> getChildren(ZookeeperInfo zkInfo);
 
     /**
      * 获取 path 节点值

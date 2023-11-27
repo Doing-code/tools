@@ -3,7 +3,10 @@ package cn.forbearance.mnt.service.impl;
 import cn.forbearance.mnt.domain.ServerDeploy;
 import cn.forbearance.mnt.repository.ServerDeployRepository;
 import cn.forbearance.mnt.service.ServerDeployService;
+import cn.forbearance.mnt.service.dto.ServerDeployQueryCriteria;
+import cn.forbearance.utils.enums.ServerTypeEnum;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,8 +26,10 @@ public class ServerDeployServiceImpl extends ServiceImpl<ServerDeployRepository,
     private final ServerDeployRepository serverDeployRepository;
 
     @Override
-    public List<ServerDeploy> queryAll() {
-        return this.list();
+    public List<ServerDeploy> queryAll(ServerDeployQueryCriteria criteria) {
+        LambdaQueryWrapper<ServerDeploy> queryWrapper = Wrappers.lambdaQuery(ServerDeploy.class)
+                .eq(ServerDeploy::getType, criteria.getType());
+        return this.list(queryWrapper);
     }
 
     @Override
@@ -55,8 +60,8 @@ public class ServerDeployServiceImpl extends ServiceImpl<ServerDeployRepository,
 
     @Override
     public ServerDeploy findByIp(String ip) {
-        LambdaQueryWrapper<ServerDeploy> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(ServerDeploy::getIp, ip);
+        LambdaQueryWrapper<ServerDeploy> queryWrapper = Wrappers.lambdaQuery(ServerDeploy.class)
+                .eq(ServerDeploy::getIp, ip);
         return this.getOne(queryWrapper);
     }
 

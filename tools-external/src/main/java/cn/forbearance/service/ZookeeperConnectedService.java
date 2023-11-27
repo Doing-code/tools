@@ -1,5 +1,6 @@
 package cn.forbearance.service;
 
+import cn.hutool.core.lang.Assert;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.framework.state.ConnectionState;
@@ -33,11 +34,13 @@ public class ZookeeperConnectedService {
     ExponentialBackoffRetry retryPolicy = new ExponentialBackoffRetry(1000, 3);
 
     public CuratorFramework getConnection(String address) {
+        Assert.notBlank(address, "zookeeper server address not null");
+
         return CONNECTED.computeIfAbsent(address, v -> {
             CuratorFramework zkClient = CuratorFrameworkFactory.builder()
                     .connectString(address)
-                    .sessionTimeoutMs(3000)
-                    .connectionTimeoutMs(5000)
+                    .sessionTimeoutMs(10000)
+                    .connectionTimeoutMs(10000)
                     .retryPolicy(retryPolicy)
                     .build();
 

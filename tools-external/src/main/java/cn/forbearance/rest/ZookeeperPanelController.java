@@ -1,5 +1,6 @@
 package cn.forbearance.rest;
 
+import cn.forbearance.domain.ZkNodeChildren;
 import cn.forbearance.domain.ZookeeperInfo;
 import cn.forbearance.service.ZookeeperPanelService;
 import io.swagger.annotations.Api;
@@ -28,7 +29,7 @@ public class ZookeeperPanelController {
 
     @ApiOperation(value = "查询子节点")
     @PostMapping("/child")
-    public ResponseEntity<List<String>> getChildren(@RequestBody ZookeeperInfo zkInfo) {
+    public ResponseEntity<List<ZkNodeChildren>> getChildren(@RequestBody ZookeeperInfo zkInfo) {
         return new ResponseEntity<>(zkPanelService.getChildren(zkInfo), HttpStatus.OK);
     }
 

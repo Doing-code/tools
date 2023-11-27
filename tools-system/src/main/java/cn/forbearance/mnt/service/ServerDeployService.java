@@ -1,6 +1,7 @@
 package cn.forbearance.mnt.service;
 
 import cn.forbearance.mnt.domain.ServerDeploy;
+import cn.forbearance.mnt.service.dto.ServerDeployQueryCriteria;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.io.IOException;
@@ -26,7 +27,7 @@ public interface ServerDeployService extends IService<ServerDeploy> {
      * @param criteria 条件
      * @return /
      */
-    List<ServerDeploy> queryAll();
+    List<ServerDeploy> queryAll(ServerDeployQueryCriteria criteria);
 
     /**
      * 根据ID查询
