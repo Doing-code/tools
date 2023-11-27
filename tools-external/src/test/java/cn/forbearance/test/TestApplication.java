@@ -1,7 +1,7 @@
 package cn.forbearance.test;
 
 import cn.forbearance.domain.RedisInfo;
-import cn.forbearance.service.redis.RedisTemplate;
+import cn.forbearance.redis.RedisTemplate;
 
 /**
  * @author cristina

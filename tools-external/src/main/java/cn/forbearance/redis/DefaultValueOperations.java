@@ -1,4 +1,4 @@
-package cn.forbearance.service.redis;
+package cn.forbearance.redis;
 
 import cn.forbearance.domain.RedisInfo;
 

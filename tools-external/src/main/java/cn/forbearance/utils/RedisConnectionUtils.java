@@ -1,8 +1,8 @@
 package cn.forbearance.utils;
 
 import cn.forbearance.domain.RedisInfo;
-import cn.forbearance.service.redis.RedisConnection;
-import cn.forbearance.service.redis.RedisConnectionFactory;
+import cn.forbearance.redis.RedisConnection;
+import cn.forbearance.redis.RedisConnectionFactory;
 import org.springframework.lang.Nullable;
 
 /**

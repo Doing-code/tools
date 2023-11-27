@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @Api(tags = "Redis：服务面板管理")
 @RequiredArgsConstructor
 @RequestMapping("/api/redisPanel")
-public class RedisPanelServiceController {
+public class RedisPanelController {
 
     private final RedisPanelService redisPanelService;
 

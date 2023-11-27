@@ -3,7 +3,7 @@ package cn.forbearance.service.impl;
 import cn.forbearance.domain.Cursor;
 import cn.forbearance.domain.RedisInfo;
 import cn.forbearance.service.RedisPanelService;
-import cn.forbearance.service.redis.RedisTemplate;
+import cn.forbearance.redis.RedisTemplate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
