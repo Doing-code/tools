@@ -61,6 +61,14 @@
     
     - 对于 Kafka 的可视化，分两种情况，KRaft、Zookeeper。（2.8版本以后用 KRaft）
     
+- 2023-12-10
+
+    - [x] 实现通过 socket 和 mysql 通信，并能够发送命令.
+    
+    - 主从同步也完善了部分，但事件解析有点繁琐且枯燥. 
+    
+    - mysql 可视化业务往后延，优先完善 Elasticsearch.
+    
 ## 功能开发
 
 - [x] Redis 可视化
@@ -77,3 +85,10 @@
 - [ ] 音视频转换
 - [ ] 图片去水印
 - [ ] ......
+
+
+开源项目的支持
+
+在此基础上，会继续完善功能.
+
+https://github.com/cmmsky/mysql-x-client/tree/master
